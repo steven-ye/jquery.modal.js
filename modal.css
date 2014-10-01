@@ -1,0 +1,102 @@
+/*-------------------------MODAL-------------------------*/
+.overlay {
+position:fixed;
+top:0px;
+left:0px;
+z-index:100;
+width:100%;
+height:100%;
+background:url(../images/overlay.png);
+display:none;
+}
+
+.modal_window {
+	margin:0;
+	padding:0;
+	overflow:hidden;
+	border:solid 1px #666;
+    position:fixed;
+	top:100px;
+	background:#fff;
+	z-index:101;
+	display:none;
+}
+
+.modal_window>h2 {
+background:#333;
+color:#FFF;
+text-align:left;
+font-family:"Lucida Sans Unicode","Lucida Grande",Sans-Serif;
+margin:0 auto;
+height: 30px;
+line-height:30px;
+position:relative;
+}
+.modal_window>h2>p {
+	line-height:30px;
+	font-size:16px;
+	margin:0 30px 0 10px;
+	overflow:hidden;
+	color:#EDEDED;
+	word-break:keep-all;/* 不换行 */
+    white-space:nowrap;/* 不换行 */
+	overflow:hidden;
+	text-overflow :ellipsis;
+}
+.modal_window>h2>span {
+	padding:0 5px;
+display:block;
+position:absolute;
+top:2px;
+right:2px;
+cursor:pointer;
+font-family:Arial, Helvetica, sans-serif;
+font-size:14px;
+font-weight:normal;
+color:#CCC
+}
+.modal_window>h2>span:hover {
+	color:#FFF
+}
+
+.modal_window>div {
+	padding:10px;
+	display:block;
+}
+
+.modal_loader {
+width:50px;
+height:50px;
+top:100px;
+position:fixed;
+background:#fff url(../images/ajax-loader.gif) no-repeat center;
+z-index:101;
+}
+
+.modal_window .novisible {
+display:none;
+}
+
+.modal_window.default {
+background:#fff;
+}
+
+
+.shadow{
+   -webkit-box-shadow:4px 2px 6px #333333; 
+    -moz-box-shadow:3px 2px 6px #333333;
+    box-shadow: 3px 2px 6px #333333;
+}
+
+/*skin:"blue" */
+.modal_window.blue{
+	background:#DFE8E7;
+	border-color:#468688
+}
+.modal_window.blue>div{
+	border-color:#64A0A6
+}
+.modal_window.blue h2{
+	background:#64A0A6;
+}
+/*-------------------------MODAL-------------------------*/
