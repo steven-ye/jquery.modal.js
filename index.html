@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+        <title>Dashboard - Admin Control Panel</title>
+		<link rel="stylesheet" href="modal.css" type="text/css" media="screen" charset="utf-8" />
+        <style>
+		 body{line-height:150%; background:#f9f9f9}
+		 h4{margin:0 auto}
+		 .strong{ font-weight:600; display:inline-block}
+		 li .strong{width:100px}
+		 .clear{clear:both}
+		 #wrapper{margin:20px; padding:20px}
+		 .demo:after{content:"";clear:both;display:block}
+		 .col{display:block;float:left; margin:5px; padding:5px}
+		 .w2{width:18%}
+		 .w10{width:98%}
+		</style>
+        
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="jquery.modal.js" type="text/javascript"></script>
+        
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+
+        //This is the Modal window calling
+	    $.fn.modal.defaults={width:500,height:300};
+	    $('.modal').modal();
+		$('.modal-ajax').modal({draggable:true,buttons:{Close:'hide'}});
+	    $('.modal_custom').modal({width:700,height:500,showSpeed:1000,closeSpeed:1000,autoOpen:false,autoClose:3000,title:false,skin:"blue",buttons:{Close:'hide'}});
+		$('.message').modal({position:{width:220,bottom:'0px',right:'0px'},shadow:false,showSpeed:1000,closeSpeed:1000,overlay:false,autoOpen:true,autoClose:5000,draggable:false,message:'Hello World, <br/> This is a test.'});
+		    ('.message').modal({position:{width:220,bottom:'0px',right:'0px'},shadow:false,showSpeed:1000,closeSpeed:1000,overlay:false,autoOpen:true,autoClose:5000,draggable:false,message:'Hello World, <br/> This is a test.'});
+   //This is the Modal window calling	
+	
+	    alert($('#modal_text').html());
+	});
+</script>
+	</head>
+	<body>
+    <section>
+    <div id="wrapper">
+			<h1>Jquery Modal Demo</h1>
+                  <div id="modal" class="demo">
+							
+							<div class="col w2">
+								<div class="content">
+									<a href="#modal_text" title="This is load div#modal_test" class="modal">Open Modal</a>
+									<h4>This link is load div#modal_test</h4>
+								</div>
+							</div>
+							<div class="col w2">
+								<div class="content">
+									<a href="test.html" title="This is Ajax." class="modal-ajax">Open Modal</a>
+									<h4>This link is load test.html via ajax and draggable</h4>
+								</div>
+							</div>
+							<div class="col w2">
+								<div class="content">
+									<a href="#" title="This is a message" message="This is a test message." class="message">Open Modal</a>
+									<h4>This is a message</h4>
+								</div>
+							</div>
+							<div class="col w2">
+								<div class="content">
+									<a href="#nothing" class="modal">Open Modal</a>
+									<h4>This link is load div#nothing, but it does not exist</h4>
+								</div>
+							</div>
+							<div class="col w2 last">
+								<div class="content">
+									<a href="test.html" title="This link is load a custom modal window" class="modal_custom">Open Modal</a>
+									<h4>This link is load a custom modal window with 700px width, 2000 ms animation speed, the title is not visible and modal class: blue</h4>
+								</div>
+							</div>
+							<div class="clear"></div>
+							<div class="col w10 last">
+								<p>
+									<span class="strong">Call like this in js(js/global.js line 2):</span> $('.modal').modal();<br />
+									.modal is the class name, what you gave it to the link<br />
+									<span class="strong">HTML code:</span> &lt;a href=&quot;<span class="italic">test.html</span>&quot; <span class="italic">title=&quot;This is the title&quot; class=&quot;modal&quot;</span>&gt;This is a simple modal link&lt;/a&gt;<br />
+									The href attribute can be a url(e.g.: test.html) or a div id(e.g.: #loadthis)<br />
+									The title attribute value show in the modal header
+								</p>
+							  <p>
+									Avaible options:<br />
+									$('.modal').modal({width:400,showSpeed:500,closeSpeed:500,title:true,skin:"default"});				
+								</p>
+								<ul>
+									<li><span class="strong">width:</span> the modal window width, in px</li>
+                                    <li><span class="strong">height:</span> the modal window max-height, in px</li>
+									<li><span class="strong">showSpeed:</span> the number of milliseconds to run the animation</li>
+									<li><span class="strong">closeSpeed:</span> the number of milliseconds to run the animation</li>
+                                    <li><span class="strong">autoOpen:</span> true or false.</li>
+                                    <li><span class="strong">autoClose:</span> the number of milliseconds to close automatically</li>
+									<li><span class="strong">position:</span> e.g. {top:&quot;200px&quot;,right:&quot;10px&quot;}.</li>
+									<li><span class="strong">overlay:</span> true or false.</li>
+                                    <li><span class="strong">title:</span> true or false.</li>
+                                    <li><span class="strong">draggable:</span> true or false.</li>
+									<li><span class="strong">skin:</span> skin class name.</li>
+								</ul>
+								<p>
+									If you want a skin, just add a new class to style.css, like this:<br />
+									.modal_window.red {<br />
+									 background:red;<br />
+									 border:2px solid blue;<br />
+									}<br />
+							  </p>
+							</div>
+							<div id="modal_text">
+								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+								</p>
+							</div>
+							<div class="clear"></div>
+							</div>
+							<div class="col w10 last">
+								<div class="content">
+									<p>The end...</p>
+								</div>
+							</div>
+							<div class="clear"></div>
+						</div>
+						<div class="clear"></div>
+						<div id="body_footer">
+							<div id="bottom_left"><div id="bottom_right"></div></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+         </div>
+    </section>
+	</body>
+</html>

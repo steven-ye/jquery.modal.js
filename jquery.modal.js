@@ -1,124 +1,174 @@
 /*
 * jQuery modal plugin
-*
-* Created by Steven Ye (steven_ye@foxmail.com) on 2014-10-01.
-* 
+* version 3.0
+* Created by Steven Ye (steven_ye@foxmail.com) on 2014-10-22.
+* MIT license
 *
 */
-
-(function($){
-	$.fn.modal=function(options){
-		var defaults={
+;(function($, window, document,undefined) {
+	//定义Modal的构造函数
+    var Modal = function(ele, opt) {
+        this.$element = ele,
+        this.defaults = {
+            version: '3.0',
 			width:400,
 			height:300,
 			showSpeed: 500,
 			closeSpeed: 500,
+			position:{},
 			autoClose:0,
+			buttons:{},
+			message:'',
 			overlay:true,
 			shadow:true,
 			autoOpen: false,
 			title:true,
+			draggable:false,
 			action:'fade',
 			skin:''
-		};
-		var op = $.extend({}, defaults, options);
-		
-		var overlay = $('<div class="overlay">').hide().appendTo("body").click(function(){close();return false});
-		var modal = $('<div>').appendTo("body");
-		var modal_head = $('<h2>').appendTo(modal);
-        var modal_body = $('<div>').appendTo(modal);
-        var modal_title = $("<p>").appendTo(modal_head);
-        var modal_span = $('<span>X</span>').appendTo(modal_head).click(function(){close(op.closeSpeed);return false});
-        var loader = $('<div class="modal_loader">').hide().appendTo("body");
-		
-		modal.addClass('modal_window');
-		if(op.shadow){modal.addClass('shadow');}
-		if(op.skin.length>0){modal.addClass(op.skin);}
-		modal.css({
-			"width":op.width+"px",
-			"top":($(window).height()-op.height)/2+"px",
-			"left":($(window).width()-op.width)/2+"px",
-        });
-		
-		modal_body.css({
-			"max-height":op.height+"px",
-			"overflow":"auto",
-			"display":"block"
-        });
-		
-		loader.css({
-			"top":($(window).height()-50)/2+"px",
-			"left":($(window).width()-50)/2+"px",
-		});
-		
-		return this.each(function(){
-			var title = $(this).attr('title')?$(this).attr('title'):'';	
-			var h = $(this).attr('href');
-			var d=h.substr(0,1);
-			
-			if(d=='#'){$(h).hide();}
-			
-			$(this).click(function(){
-				if(!op.title){modal_head.hide();}
+        },
+        this.options = $.extend({}, this.defaults, $.fn.modal.defaults, opt),
+		this.modal = $('<div class="modal_window"><h2><p></p><span></span></h2><div></div><p></p>'),
+		this.overlay = $('<div>')
+    }
+    //定义Modal的方法
+    Modal.prototype = {
+        init: function() {
+			var that = this,settings = this.options,
+			    h = this.$element.attr('href'),
+				modal = this.modal,overlay = this.overlay,
+			    modal_head = $(modal).children('h2'),
+			    modal_body = $(modal).children('div').empty(),
+			    modal_foot = $(modal).children('p').empty(),
+			    modal_title = $(modal_head).children('p').empty(),
+			    modal_span = $(modal_head).children('span').html("&times;").click(function(){that.hide();return false});
 				
-				if(d!='#'){
-				    loader.show();
-			    	modal_body.load(h+' section',function(r,e,q){
-				    	loader.hide();
-				    	if(e=='error'){
-				    	    modal_body.html("Failed to load the file: "+ h);
-				    	}else{
-						
-				    	}
-			    	});
-			    }else if($(h).length>0){
-				    modal_body.html($(h).html());
-			    }else{
-			    	modal_body.html("This element doesn't exist: "+h);
-			    }
+				if(h.charAt(0)=='#'){$(h).hide();}
 				
-				modal_title.text(title);
-				if(op.title){
-				    modal_head.show();
-			    }else{
+				if(settings.title){
+					modal_title.text(that.$element.attr('title'));
+					modal_head.show();
+				}else{
 					modal_head.hide();
 				}
+				modal_body.css({
+			 	"max-height":settings.height+"px",
+			 	"overflow":"auto",
+			 	"display":"block"
+				});
 				
-				open(op.openSpeed);
-				
-				return false;
-			});
+				modal.css({"width":settings.width+"px"});
+				if($.isEmptyObject(settings.position)){
+					modal.css({
+			 	        "top":($(window).height()-settings.height)/2+"px",
+			 	        "left":($(window).width()-settings.width)/2+"px"
+		    	    });
+				}else{
+				    modal.css(settings.position);
+				}
 			
-			if(op.autoOpen){$(this).click();}
+				//customized buttons
+					if($.isEmptyObject(settings.buttons)){
+						modal_foot.hide();
+					}else{
+						modal_foot.show();
+						$.each(settings.buttons,function(name,callback){
+							var button = $('<a>',{text: name}).appendTo(modal_foot);
+							if(typeof callback == 'function'){
+								button.click(function(){callback();return false});
+							}else if(typeof callback == 'string'){
+								button.click(function(){that[callback]();return false});
+							}
+							
+						});
+					}
+			
+			if(settings.shadow)this.modal.addClass('shadow');
+			if(settings.skin)this.modal.addClass(settings.skin);
+			
+			if(settings.overlay){this.overlay.addClass('overlay');}
+			else{this.overlay.removeClass('overlay');}
+			this.overlay.click(function(){that.hide();return false});
+			
+			this.$element.click(function(e){
+				e.preventDefault();
+				
+				that.show();
+			});
+			if(settings.autoOpen)this.show();
+        },
+		show: function() {
+			var that = this, settings = this.options,
+			    h = this.$element.attr('href'),
+				m = this.$element.attr('message'),
+				modal_body = this.modal.children('div');
+									
+				if(h.charAt(0)!='#'){
+					modal_body.html('<div class="modal_loader"></div>');  //show loading.gif
+				    
+			    	modal_body.load(h,function(r,e,q){
+				        if(e=='error'){
+				    	    modal_body.html("Failed to load the file: "+ h);
+				        }
+			    	});
+			    }else if($(h).length>0){
+			    	modal_body.html($(h).html());
+			    }else if(h.length==1){
+					modal_body.html(m?m:settings.message);
+				}else{
+			        modal_body.html("This element doesn't exist: "+h);
+			    }
+			
+			this.overlay.appendTo('body').fadeIn(settings.openSpeed);
+			
+			if(settings.draggable){
+				this.modal.children('h2,p').mousedown(function(e){
+					var isMove = true,
+					    abs_x = e.pageX - that.modal.offset().left;
+					    abs_y = e.pageY - that.modal.offset().top;
+					$(document).mousemove(function (e) {
+					    if (isMove) {
+					       that.modal.css({'left':e.pageX - abs_x, 'top':e.pageY - abs_y});
+					    }
+					}).mouseup(function () {
+					    isMove = false;
+					});
+				});
+			}
+			
+			this.modal.appendTo('body');
+			if(settings.autoClose>0){
+				this.modal.fadeIn(settings.openSpeed,function(){
+					setTimeout(function(){that.hide()},settings.autoClose)
+				});
+			}else{
+				this.modal.fadeIn(settings.openSpeed);
+			}
+		},
+		hide: function() {
+			var settings = this.options;
+			this.overlay.fadeOut(settings.closeSpeed, function(){$(this).detach()});
+			this.modal.fadeOut(settings.closeSpeed, function(){$(this).detach()});
+		},
+		version : function(){
+			alert('jQuery.modal v3.0 by Steven Ye (steven_ye@foxmail.com');
+		}
+    }
+    //在插件中使用Modal对象
+    $.fn.modal = function(options) {
+		return this.each(function(){
+			var $this = $(this),
+                data = $this.data('modal');
+			if(!data){
+			    //创建Modal的实体
+			    $this.data('modal',(data = new Modal($(this), options)));
+			    //调用其方法
+			    data.init();
+			    if(typeof options == 'string') data[options];
+			}
 		});
-		
-		function open(speed){
-			if(!speed)speed = 500;
-			if(op.overlay){
-				overlay.fadeIn(speed);
-			}
-			if(op.action=='slide'){
-				modal.slideDown(speed,function(){
-				    if(op.autoClose>0){
-				    setTimeout(function(){close();},op.autoClose);
-				    }
-			    });
-			}else{
-				modal.fadeIn(speed,function(){
-				    if(op.autoClose>0){
-				    setTimeout(function(){close();},op.autoClose);
-				    }
-			    });
-			}
-		}
-		function close(speed){
-			if(speed==null)speed = 500;
-			if(op.action=='slide'){
-			    modal.slideUp(speed);
-			}else{
-				modal.fadeOut(speed);
-			}
-			overlay.fadeOut(speed);
-		}
-	}
-})(jQuery);
+    }
+	
+	$.fn.modal.defaults = {}
+	
+})(jQuery, window, document);
